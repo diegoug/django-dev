@@ -1,0 +1,25 @@
+version: "3.8"
+networks:
+  django:
+    external: true
+
+services:
+  
+  django-dev:
+    container_name: django-dev
+    image: django-dev
+    build:
+      context: ../../services/django_ms
+      dockerfile: ../../docker/common/build/django_ms/Dockerfile
+      target: development
+    command: /bin/sh -c "cd /home/app/web && python manage.py runserver 0.0.0.0:${DJANGO_PORT}"
+    volumes:
+      - ../../services/django_ms:/home/app/web
+      - ${LOCAL_SSH}/.ssh/id_rsa.pub:/tmp/authorized_keys:ro
+    ports:
+      - ${DJANGO_PORT}:${DJANGO_PORT}
+      - "2501:22"
+    networks:
+      django:
+        aliases:
+          - ${DJANGO_HOST}
