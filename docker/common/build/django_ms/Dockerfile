@@ -53,20 +53,11 @@ RUN rm -rf /wheels
 # -----------------------------------------------------------------------------
 FROM main AS development
 
-RUN apt-get update \
-&& apt-get -y install openssh-server
-
-RUN mkdir /var/run/sshd && mkdir /home/app/.ssh/
-
-COPY docker/entrypoint.dev.sh /home/app/entrypoint.dev.sh
-
-RUN sed -i 's/\r$//g'  /home/app/entrypoint.dev.sh
-RUN chmod +x /home/app/entrypoint.dev.sh
+RUN apt-get update
 
 WORKDIR /home/app/web
 
-ENTRYPOINT ["/home/app/entrypoint.dev.sh"]
-CMD ["/usr/sbin/sshd", "-D", "-f", "/etc/ssh/sshd_config"]
+CMD ["tail", "-f", "/dev/null"]
 
 # -----------------------------------------------------------------------------
 # Production image, includes the application files

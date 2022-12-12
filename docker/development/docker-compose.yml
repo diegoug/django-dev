@@ -1,10 +1,10 @@
 version: "3.8"
+
 networks:
   django:
     external: true
 
-services:
-  
+services: 
   django-dev:
     container_name: django-dev
     image: django-dev
@@ -12,7 +12,7 @@ services:
       context: ../../services/django_ms
       dockerfile: ../../docker/common/build/django_ms/Dockerfile
       target: development
-    #command: /bin/sh -c "cd /home/app/web && python manage.py runserver 0.0.0.0:${DJANGO_PORT}"
+    command: /bin/sh -c "cd /home/app/web && python manage.py runserver 0.0.0.0:${DJANGO_PORT}"
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -20,7 +20,6 @@ services:
       - POSTGRES_HOST=${POSTGRES_HOST}
     volumes:
       - ../../services/django_ms:/home/app/web
-      - ${LOCAL_SSH}/.ssh/id_rsa.pub:/tmp/authorized_keys:ro
     ports:
       - ${DJANGO_PORT}:${DJANGO_PORT}
       - "2501:22"
@@ -37,7 +36,7 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
-      - ${LOCAL_VAR}/lib/postgres-dev:/var/lib/postgresql/data
+      - postgres_development:/var/lib/postgresql/data
     ports:
       - ${POSTGRES_PORT}:5432
     healthcheck:
@@ -53,3 +52,6 @@ services:
       django:
         aliases:
           - ${POSTGRES_HOST}
+
+volumes:
+  postgres_development:
