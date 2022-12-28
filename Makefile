@@ -10,3 +10,12 @@ stop-development:
 
 create-network:
 	docker network create django
+
+start-production:
+	# set env
+	cd docker/production/ && cp -f production.env .env
+	# start
+	cd docker/production/ && docker-compose up -d
+
+stop-production:
+	cd docker/production/ && docker-compose stop

@@ -71,6 +71,5 @@ RUN chmod +x /home/app/entrypoint.prod.sh
 
 WORKDIR /home/app/web
 COPY . .
-RUN mv build_dependencies/* /home/app/web/ && rm -rf build_dependencies/ && rm -rf docker/
 
 ENTRYPOINT ["/home/app/entrypoint.prod.sh"]

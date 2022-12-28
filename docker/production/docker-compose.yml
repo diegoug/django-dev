@@ -5,39 +5,34 @@ networks:
     external: true
 
 services: 
-  django-dev:
-    container_name: django-dev
-    image: django-dev
+  django-prod:
+    container_name: django-prod
+    image: django-prod
     build:
       context: ../../services/django_ms
       dockerfile: ../../docker/common/build/django_ms/Dockerfile
-      target: development
-    command: /bin/sh -c "cd /home/app/web && python manage.py runserver 0.0.0.0:${DJANGO_PORT}"
+      target: production
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_HOST=${POSTGRES_HOST}
-    volumes:
-      - ../../services/django_ms:/home/app/web
-    ports:
-      - ${DJANGO_PORT}:${DJANGO_PORT}
+      - MAX_REQUESTS=${WSGI_MAX_REQUEST}
+      - TIMEOUT=${WSGI_TIMEOUT}
     networks:
       django:
         aliases:
           - ${DJANGO_HOST}
   
-  postgres-dev:
-    container_name: postgres-dev
+  postgres-prod:
+    container_name: postgres-prod
     image: postgres:15
     environment:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
-      - postgres_development:/var/lib/postgresql/data
-    ports:
-      - ${POSTGRES_PORT}:5432
+      - postgres_production:/var/lib/postgresql/data
     healthcheck:
       test:
         [
@@ -53,4 +48,4 @@ services:
           - ${POSTGRES_HOST}
 
 volumes:
-  postgres_development:
+  postgres_production:
